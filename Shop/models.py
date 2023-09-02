@@ -106,3 +106,7 @@ class Payment(models.Model):
     
 
 class Reviews(models.Model):
+    Name=models.CharField(max_length=255)
+    Email=models.EmailField(unique=True,blank=True,null=True)
+    Rating=models.PositiveSmallIntegerField()
+    Review=models.TextField()
