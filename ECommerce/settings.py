@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,23 +21,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-jq18@m!fr#(64t7kh1=mbgco1@3ybz7rfu%t0xh&r)x%82vmbs'
+SECRET_KEY = os.urandom(2500)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG =False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS =["127.0.0.1"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+   'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Shop',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +57,7 @@ ROOT_URLCONF = 'ECommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,8 +78,16 @@ WSGI_APPLICATION = 'ECommerce.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  
+        'NAME': 'Shopdb',
+        'USER':'root',
+        'HOST':'127.0.0.1',
+        'PORT':'3306',
+        'PASSWORD':'',
+        
+        'OPTIONS': {  
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
+        }  
     }
 }
 
@@ -115,7 +126,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+
 STATIC_URL = 'static/'
+MEDIA_URL='media/'
+
+if DEBUG:
+    STATICFILES_DIRS=[os.path.join(BASE_DIR,'static/')]
+else:
+    STATIC_ROOT=os.path.join(BASE_DIR,'static/')
+
+MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
