@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.views.generic import *
 
 class EcommerceApp():
     #---------------------HomePage-----------------------#
