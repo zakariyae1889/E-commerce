@@ -1,6 +1,4 @@
 from django.db import models
-
-# Create your models here.
 from django.db import models
 from django.utils.text import slugify
 from django.contrib.auth.models import User
@@ -30,29 +28,36 @@ class Categorys(models.Model):
         return self.Name
     
 class Products(models.Model):
+    category=models.ForeignKey(Categorys,on_delete=models.CASCADE)
     title=models.CharField(max_length=255)
     Description=models.TextField(max_length=255)
     Price=models.PositiveIntegerField()
     DiscountPrice=models.PositiveIntegerField(null=True,blank=True)
-    color=models.CharField(max_length=255,choices=type_color)
-    size=models.CharField(max_length=255,choices=type_size)
+   
     photo=models.ImageField(upload_to='PhotoProduct/')
     slug=models.SlugField(blank=True,null=True)
 
-    category=models.ForeignKey(Categorys,on_delete=models.CASCADE)
+    
 
     def save(self,*args,**kwargs):
         self.slug=slugify(self.title)
-        return super(self,Products).save(*args,**kwargs)
+        return super(Products,self).save(*args,**kwargs)
+    
+    def get_discount(self):
+        Discount= self.DiscountPrice * (95/100)
+        return Discount
     
     def __str__(self) -> str:
-        return self.Name
+        return self.title
 
 class OrderItem(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     product=models.ForeignKey(Products,on_delete=models.CASCADE)
-    quantity=models.PositiveIntegerField()
+    color=models.CharField(max_length=255,choices=type_color,default='White')
+    size=models.CharField(max_length=255,choices=type_size,default='S')
 
+    quantity=models.PositiveIntegerField()
+    
     def get_price(self):
         Price=self.quantity * self.product.Price
         return Price
@@ -69,7 +74,7 @@ class OrderItem(models.Model):
         return total
     
     def __str__(self) -> str:
-        return self.title
+        return self.product.title
 
 class Order(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
