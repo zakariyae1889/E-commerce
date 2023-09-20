@@ -59,14 +59,21 @@
                     </div>
                     <small class="pt-1">(50 Reviews)</small>
                 </div>
-                {%if  messages %}
-                    {%for message in  messages%}
-                        
-                        <div class="alert alert-success" role="alert">
-                            <strong>{{message}}</strong> 
-                        </div>
-                    {%endfor%}
-                {%endif%}
+               
+                {%for message in  messages%}
+                    {%if message.error %}
+                    <div class="alert alert-danger" role="alert">
+                       <strong>{{message}}</strong> 
+                    </div>
+                    {%else%}
+                    <div class="alert alert-success" role="alert">
+                        <strong>{{message}}</strong> 
+                    </div>
+                    {%endif%}
+                   
+                {%endfor%}
+               
+                
                 {%if DiscountPrice > 0%}
                     <h3 class="font-weight-semi-bold mb-4">${{product.DiscountPrice}}</h3><del class="text-danger">${{product.Price}}</del></h6>
                 {%else%}

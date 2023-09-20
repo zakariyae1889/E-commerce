@@ -3,8 +3,6 @@ from .models import *
 from Product.models import *
 from django.utils import timezone
 from django.contrib import messages
-
-
 # Create your views here.
 class OrderApp():
     def Add_to_Cart(request,slug):
@@ -41,7 +39,7 @@ class OrderApp():
                 orderItem.save()
                 messages.success(request,"Was added to cart for new order")
                 return render(request,template_name='Shop/detail.html', context={"product":product})
-               
+        else:messages.error(request,"you  must be logge in")   
         return render(request,template_name='Shop/detail.html', context={"product":product})
     #--------------------------------------------------------------------------#
     def PageCart(request):
@@ -72,5 +70,24 @@ class OrderApp():
             messages.error(request,"the  order is delete from your cart")
         return redirect('Path_Cart')
     #--------------------------------------------------------------------------#
-    
+    def add_qty(request,id):
+        if  request.user.is_authenticated and not request.user.is_anonymous and id:
+            orderdetails=get_object_or_404(OrderDetails,id=id)
+            orderdetails.quantity+=1
+            orderdetails.save()
+            
+        return redirect('Path_Cart')
+    #--------------------------------------------------------------------------#    
+    def sub_qty(request,id):
+        if  request.user.is_authenticated and not request.user.is_anonymous and id:
+            orderdetails=get_object_or_404(OrderDetails,id=id)
+            if orderdetails.quantity >1:
+                orderdetails.quantity-=1
+                orderdetails.save()
+               
+        return redirect('Path_Cart')
+
+
+
+               
 
