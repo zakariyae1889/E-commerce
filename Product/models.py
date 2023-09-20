@@ -31,7 +31,7 @@ class Products(models.Model):
     Name=models.CharField(max_length=255)
     Description=models.TextField()
     Price=models.PositiveIntegerField()
-    DiscountPrice=models.PositiveIntegerField(null=True,blank=True)
+    DiscountPrice=models.PositiveIntegerField(null=True,blank=True,default=0)
    
     photo=models.ImageField(upload_to='PhotoProduct/')
     
@@ -44,7 +44,7 @@ class Products(models.Model):
         return super(Products,self).save(*args,**kwargs)
     
     def get_discount(self):
-        Discount= self.DiscountPrice * (95/100)
+        Discount= self.DiscountPrice 
         return Discount
     
     def __str__(self) -> str:

@@ -1,6 +1,7 @@
 from django.db import models
 from Product.models import *
 from django.contrib.auth.models import User
+
 # Create your models here.
 class Order(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -17,23 +18,27 @@ class OrderDetails(models.Model):
     order=models.ForeignKey(Order,on_delete=models.CASCADE)
     color=models.CharField(max_length=255,choices=type_color,default='White')
     size=models.CharField(max_length=255,choices=type_size,default='S')
-    quantity=models.PositiveIntegerField()
+    quantity=models.PositiveIntegerField(default=1)
     
     def get_price(self):
         Price=self.quantity * self.product.Price
         return Price
     
     def get_discount(self):
-        Discount=self.quantity * (self.product.DiscountPrice * (5/100))
+        Discount=self.quantity * self.product.DiscountPrice 
+
         return Discount
+    #--------------------#
+    def get_total(self):
+        if self.get_discount:
+            self.total=self.get_discount()
+        else:self.total=self.get_price()
     
-    def get_Total(self):
-        if self.get_discount() > 0:
-            total=self.get_discount()
-        else: 
-            total=self.get_price()
-        return total
-    
+
+
+       
+                     
+   
   
 
 

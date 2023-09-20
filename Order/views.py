@@ -3,7 +3,8 @@ from .models import *
 from Product.models import *
 from django.utils import timezone
 from django.contrib import messages
-from django.contrib import  messages
+
+
 # Create your views here.
 class OrderApp():
     def Add_to_Cart(request,slug):
@@ -17,11 +18,16 @@ class OrderApp():
             
             order=Order.objects.filter(user=request.user, is_finished=False)
             if order:
-               old_order=get_object_or_404(Order,user=request.user, is_finished=False)
-               orderItem=OrderDetails.objects.create(product=product,order=old_order,color=color,size=size,quantity=qty)
-               orderItem.save()
-               messages.success(request,"Was added to cart")
-               return render(request,template_name='Shop/detail.html', context={"product":product})
+                old_order=get_object_or_404(Order,user=request.user, is_finished=False)
+                if OrderDetails.objects.filter(order=old_order,product=product).exists():
+                   
+                  orderitem=get_object_or_404(OrderDetails,order=old_order,product=product)
+                  orderitem.quantity+=int(qty)
+                  orderitem.save()
+                else:
+                   orderItem=OrderDetails.objects.create(product=product,order=old_order,color=color,size=size,quantity=qty)
+                messages.success(request,"Was added to cart")
+                return render(request,template_name='Shop/detail.html', context={"product":product})
                
             else:
                
@@ -39,8 +45,32 @@ class OrderApp():
         return render(request,template_name='Shop/detail.html', context={"product":product})
     #--------------------------------------------------------------------------#
     def PageCart(request):
+        Orderdetails=None 
+        order=None
+        total=0
         if  request.user.is_authenticated and not request.user.is_anonymous:
             if Order.objects.filter(user=request.user,is_finished=False):
                 order=get_object_or_404(Order,user=request.user,is_finished=False)
-                item=OrderDetails.objects.filter(order=order)
-        return render(request,template_name="Shop/cart.html" ,context={"item":item})
+                Orderdetails=OrderDetails.objects.all().filter(order=order)
+                total=0
+                for sub in Orderdetails:
+                    if sub.product.DiscountPrice:
+                        total+=sub.quantity * sub.product.DiscountPrice
+                    else : total+=sub.quantity * sub.product.Price
+                
+        return render(request,template_name="Shop/cart.html" ,  context={
+            'order':order,
+            'Orderdetails':Orderdetails,
+            'total':total
+           
+        })
+    #--------------------------------------------------------------------------#
+    def Remove_from_Cart(request,id):
+        if  request.user.is_authenticated and not request.user.is_anonymous and id:
+            Orderdetails=get_object_or_404(OrderDetails,id=id)
+            Orderdetails.delete()
+            messages.error(request,"the  order is delete from your cart")
+        return redirect('Path_Cart')
+    #--------------------------------------------------------------------------#
+    
+

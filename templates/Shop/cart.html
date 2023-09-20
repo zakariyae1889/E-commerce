@@ -19,57 +19,78 @@
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
             <div class="col-lg-8 table-responsive mb-5">
+                {%if  messages %}
+                    {%for message in  messages%}
+                        
+                        <div class="alert alert-danger" role="alert">
+                            <strong>{{message}}</strong> 
+                        </div>
+                    {%endfor%}
+                {%endif%}
+                {%if not request.user.is_authenticated or request.user.is_anonymous%}
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">You must be<a href="">Logged in</a></h4>
+                 </div>
+                {%elif order%}
                 <table class="table table-bordered text-center mb-0">
                     <thead class="bg-secondary text-dark">
                         <tr>
-                            <th>Order</th>
-                            <th>Category</th>
+                        
                             <th>Products</th>
                             <th>Price</th>
                             <th>Quantity</th>
-                            <th>Color</th>
-                            <th>Size</th>
                             <th>Total</th>
                             <th>Remove</th>
                         </tr>
                     </thead>
                     <tbody class="align-middle">
+                        {%for OrderItem in Orderdetails %}
                         <tr>
-                            <td class="align-middle">$150</td>
-                            <td class="align-middle">$150</td>
-                            <td class="align-middle"><img src="{{item.product.photo.url}}" alt="" style="width: 50px;">{{item.Name}}</td>
-                            <td class="align-middle">$150</td>
+                        
+                            <td class="align-middle"><img src="{{OrderItem.product.photo.url}}" alt="" style="width: 50px;" height="95px">{{OrderItem.Name}}</td>
+                            {%if OrderItem.product.DiscountPrice > 0%}
+                            <td class="align-middle">${{OrderItem.product.DiscountPrice}}</td>
+                            {%else%}
+                            <td class="align-middle">${{OrderItem.product.Price}}</td>
+                            {%endif%}
                             <td class="align-middle">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-minus" >
-                                        <i class="fa fa-minus"></i>
-                                        </button>
+                                        <a href="{%url 'Path_Sub_Qty' id=OrderItem.id %}" class="btn btn-sm btn-primary btn-minus" >
+                                            <i class="fa fa-minus"></i>
+                                        </a>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value="1">
+                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value="{{OrderItem.quantity}}">
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-plus">
+                                        <a href="{%url 'Path_Add_Qty' id=OrderItem.id %}" class="btn btn-sm btn-primary btn-plus">
                                             <i class="fa fa-plus"></i>
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle">$150</td>
-                            <td class="align-middle"><button class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
+                            {%if OrderItem.product.DiscountPrice > 0%}
+                            <td class="align-middle">${{OrderItem.get_discount}}</td>
+                            {%else%}
+                            <td class="align-middle">${{OrderItem.get_price}}</td>
+                            {%endif%}
+                        
+                            
+                            <td class="align-middle"><a href="{% url 'Path_Remove_Cart' OrderItem.id%}" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td>
                         </tr>
-                      
+                        {%endfor%}
+                    
                     </tbody>
                 </table>
-            </div>
-            <div class="col-lg-4">
-                <form class="mb-5" action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control p-4" placeholder="Coupon Code">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary">Apply Coupon</button>
-                        </div>
+                {%else%}
+                    <div class="alert alert-success" role="alert">
+                         <h4 class="alert-heading">No orders here<a href="{%url 'Path_Shop'%}">AllProduct</a></h4>
+                            
                     </div>
-                </form>
+                {%endif%}
+            </div>
+            {%if order%}
+            <div class="col-lg-4">
+              
                 <div class="card border-secondary mb-5">
                     <div class="card-header bg-secondary border-0">
                         <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
@@ -77,22 +98,19 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3 pt-1">
                             <h6 class="font-weight-medium">Subtotal</h6>
-                            <h6 class="font-weight-medium">$150</h6>
+                           
+                                    <h6 class="font-weight-medium">${{total}}</h6>
+                               
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">$10</h6>
-                        </div>
+                      
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
-                        <div class="d-flex justify-content-between mt-2">
-                            <h5 class="font-weight-bold">Total</h5>
-                            <h5 class="font-weight-bold">$160</h5>
-                        </div>
+                      
                         <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
                     </div>
                 </div>
             </div>
+            {%endif%}
         </div>
     </div>
     <!-- Cart End -->
