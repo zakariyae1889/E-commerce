@@ -1,0 +1,28 @@
+{%extends 'index.html'%}
+{% load bootstrap4 %}
+{%block content%}
+<div class="container-fluid bg-secondary mb-5">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+      <h1 class="font-weight-semi-bold text-uppercase mb-3 text-primary">Register SingUp_Now</h1>
+      <div class="d-inline-flex">
+          <p class="m-0"><a href="">Home</a></p>
+          <p class="m-0 px-2">-</p>
+          <p class="m-0">Register</p>
+      </div>
+  </div>
+</div>
+<div class="container-fluid ">
+    <div class="card" style="width:100%;">
+        <div class="card-body">
+          <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form formRegister %}
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">SingUp</button>
+            {% endbuttons %}
+          </form>
+        
+        </div>
+      </div>
+</div>
+{%endblock%}
