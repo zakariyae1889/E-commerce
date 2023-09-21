@@ -3,11 +3,13 @@ from .models import *
 from Product.models import *
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 class OrderApp():
+    @login_required
     def Add_to_Cart(request,slug):
         product=get_object_or_404(Products,slug=slug)
-        if 'quantity' in request.POST and 'color' in request.POST and 'size' in request.POST and request.user.is_authenticated and not request.user.is_anonymous:
+        if 'quantity' in request.POST and 'color' in request.POST and 'size' in request.POST  and request.user.is_authenticated and not request.user.is_anonymous:
             
             qty=request.POST['quantity']
             color=request.POST['color']
@@ -39,9 +41,9 @@ class OrderApp():
                 orderItem.save()
                 messages.success(request,"Was added to cart for new order")
                 return render(request,template_name='Shop/detail.html', context={"product":product})
-        else:messages.error(request,"you  must be logge in")   
         return render(request,template_name='Shop/detail.html', context={"product":product})
     #--------------------------------------------------------------------------#
+    @login_required
     def PageCart(request):
         Orderdetails=None 
         order=None
@@ -63,6 +65,7 @@ class OrderApp():
            
         })
     #--------------------------------------------------------------------------#
+    @login_required
     def Remove_from_Cart(request,id):
         if  request.user.is_authenticated and not request.user.is_anonymous and id:
             Orderdetails=get_object_or_404(OrderDetails,id=id)
@@ -70,6 +73,7 @@ class OrderApp():
             messages.error(request,"the  order is delete from your cart")
         return redirect('Path_Cart')
     #--------------------------------------------------------------------------#
+    @login_required
     def add_qty(request,id):
         if  request.user.is_authenticated and not request.user.is_anonymous and id:
             orderdetails=get_object_or_404(OrderDetails,id=id)
@@ -77,7 +81,8 @@ class OrderApp():
             orderdetails.save()
             
         return redirect('Path_Cart')
-    #--------------------------------------------------------------------------#    
+    #--------------------------------------------------------------------------# 
+    @login_required   
     def sub_qty(request,id):
         if  request.user.is_authenticated and not request.user.is_anonymous and id:
             orderdetails=get_object_or_404(OrderDetails,id=id)

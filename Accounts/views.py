@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from .models import Profiles
 from .form import RegisterForm
 from django.contrib.auth import authenticate,login
+from django.contrib.auth.decorators import login_required
 
 class AccountApp():
     def PageRegister(request):
@@ -20,6 +21,7 @@ class AccountApp():
         else:formRegister=RegisterForm()
         return render(request,template_name='registering/SingUp.html' ,context={"formRegister":formRegister})
     #------------------------------------------#
+    @login_required 
     def PageProfile(request):
         pro=get_object_or_404(Profiles,customer=request.user)
         return render(request, template_name="Profile/profiles.html",context={"pro":pro})
