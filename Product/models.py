@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
-
+from django.contrib.auth.models import User
+from Accounts.models import Profiles
 
 # --------------------------------------------Create your models here-------------------------------------#.
 type_color=(
@@ -47,5 +48,17 @@ class Products(models.Model):
         Discount= self.DiscountPrice 
         return Discount
     
+
+    def __str__(self) -> str:
+        return self.Name
+    
+class Reviews(models.Model):
+
+    Name=models.CharField(max_length=255)
+    Email=models.EmailField(max_length=255)
+    product=models.ForeignKey(Products,on_delete=models.CASCADE)
+    Review=models.TextField()
+    data=models.DateTimeField(auto_now=True)
+
     def __str__(self) -> str:
         return self.Name

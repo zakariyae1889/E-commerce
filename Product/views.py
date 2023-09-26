@@ -2,48 +2,57 @@ from django.shortcuts import render,get_object_or_404,redirect
 from django.core.paginator import Paginator
 from .models import *
 from Order.models import *
+from .form import FormReviews
 class ProductApp():
     #--------------------------------------------------------------------------------------------------------#
     def PageShop(request):
+        
         product=Products.objects.all()
         paginator=Paginator(product,6)
         page_number=request.GET.get('page')
+      
 
         Page_obj=paginator.get_page(page_number)
         return render(
             request,
             template_name="Shop/shop.html",
             context={
-                "product":Page_obj
+                "product":Page_obj,
+                
         }
     )
     #--------------------------------------------------------------------------------------------------------#
     def PageShopDetails(request,slug):
         product=get_object_or_404(Products,slug=slug)
-        return render(request,template_name='Shop/detail.html', context={"product":product})
-    
-    def add_qty(request,id):
-        if  request.user.is_authenticated and not request.user.is_anonymous and id:
-            orderdetails=get_object_or_404(OrderDetails,id=id)
-            orderdetails.quantity+=1
-            orderdetails.save()
-            
-        return render(request,template_name='Shop/detail.html', context={"orderdetails":orderdetails})
         
-       
+        
+        reviews=Reviews.objects.filter(product=product)
+        rev_count=reviews.count
+        paginator=Paginator(reviews,3)
+        page_number=request.GET.get('page')
 
-
-      
-    
-    def sub_qty(request,id):
-        if  request.user.is_authenticated and not request.user.is_anonymous and id:
-            orderdetails=get_object_or_404(OrderDetails,id=id)
-            if orderdetails.quantity >1:
-                orderdetails.quantity-=1
-                orderdetails.save()
+        Page_obj=paginator.get_page(page_number)
+        if request.method=='POST':
+            form=FormReviews(request.POST)
+            if form.is_valid():
+                myform=form.save(commit=False)
+              
+                myform.product=product
+                myform.save()
                
-        return render(request,template_name='Shop/detail.html', context={"orderdetails":orderdetails})
-        
+              
+
+        else:form=FormReviews()
+        return render(request,template_name='Shop/detail.html',  context=
+        {
+            "product":product,
+            "form":form,
+            "reviews":Page_obj,
+            "rev_count":rev_count,
+            
+        })
+    
+    
     
      
 
