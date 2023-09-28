@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'Product',
     'Order',
     'Accounts',
+    'Payment',
     
 
     
