@@ -4,11 +4,30 @@ from Product.models import *
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from Product.form import FormReviews
+from django.core.paginator import Paginator
 # Create your views here.
 class OrderApp():
     @login_required
     def Add_to_Cart(request,slug):
         product=get_object_or_404(Products,slug=slug)
+        form=FormReviews()
+          
+        reviews=Reviews.objects.filter(product=product)
+        rev_count=reviews.count
+        paginator=Paginator(reviews,3)
+        page_number=request.GET.get('page')
+        Page_obj=paginator.get_page(page_number)
+        if request.method=='POST':
+            form=FormReviews(request.POST)
+            if form.is_valid():
+                myform=form.save(commit=False)
+              
+                myform.product=product
+                myform.save()
+               
+       
+               
         if 'quantity' in request.POST and 'color' in request.POST and 'size' in request.POST  and request.user.is_authenticated and not request.user.is_anonymous:
             
             qty=request.POST['quantity']
@@ -27,7 +46,13 @@ class OrderApp():
                 else:
                    orderItem=OrderDetails.objects.create(product=product,order=old_order,color=color,size=size,quantity=qty)
                 messages.success(request,"Was added to cart")
-                return render(request,template_name='Shop/detail.html', context={"product":product})
+                return render(request,template_name='Shop/detail.html',  context=
+                {
+                    "product":product,
+                    "form":form,
+                    "reviews":Page_obj,
+                    "rev_count":rev_count,
+                })
                
             else:
                
@@ -40,9 +65,24 @@ class OrderApp():
                 orderItem=OrderDetails.objects.create(product=product,order=new_order,color=color,size=size,quantity=qty)
                 orderItem.save()
                 messages.success(request,"Was added to cart for new order")
-                return render(request,template_name='Shop/detail.html', context={"product":product})
-        return render(request,template_name='Shop/detail.html', context={"product":product})
-    #--------------------------------------------------------------------------#
+                return render(request,template_name='Shop/detail.html',  context=
+                {
+                    "product":product,
+                    "form":form,
+                    "reviews":Page_obj,
+                    "rev_count":rev_count,
+                })
+                
+           
+        return render(request,template_name='Shop/detail.html',  context=
+        {
+            "product":product,
+            "form":form,
+            "reviews":Page_obj,
+            "rev_count":rev_count,
+        })
+    #----------------------------------------------#
+     
     @login_required
     def PageCart(request):
         Orderdetails=None 

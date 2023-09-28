@@ -3,13 +3,29 @@ from django.core.paginator import Paginator
 from .models import *
 from Order.models import *
 from .form import FormReviews
+from .filter import CategoryFliter
 class ProductApp():
     #--------------------------------------------------------------------------------------------------------#
     def PageShop(request):
         
         product=Products.objects.all()
+
+        MyfilterCategory=CategoryFliter(request.GET,queryset=product)
+        product=MyfilterCategory.qs
+
+
+       
+
+
+
+
         paginator=Paginator(product,6)
         page_number=request.GET.get('page')
+
+
+
+      
+        
       
 
         Page_obj=paginator.get_page(page_number)
@@ -18,6 +34,9 @@ class ProductApp():
             template_name="Shop/shop.html",
             context={
                 "product":Page_obj,
+                "MyfilterCategory":MyfilterCategory,
+                
+
                 
         }
     )
