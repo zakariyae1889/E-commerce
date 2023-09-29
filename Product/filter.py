@@ -7,17 +7,3 @@ class CategoryFliter(django_filters.FilterSet):
         
         model=Products
         fields=["category"]
-
-class ColorFilter(django_filters.FilterSet):
-    class Meta:
-
-
-        model=OrderDetails
-        fields=["color"]
-
-class SizeFilter(django_filters.FilterSet):
-    class Meta:
-
-
-        model=OrderDetails
-        fields=["size"]

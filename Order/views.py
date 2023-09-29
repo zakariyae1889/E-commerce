@@ -28,11 +28,9 @@ class OrderApp():
                
        
                
-        if 'quantity' in request.POST and 'color' in request.POST and 'size' in request.POST  and request.user.is_authenticated and not request.user.is_anonymous:
+        if 'quantity' in request.POST    and request.user.is_authenticated and not request.user.is_anonymous:
             
             qty=request.POST['quantity']
-            color=request.POST['color']
-            size=request.POST['size']
            
             
             order=Order.objects.filter(user=request.user, is_finished=False)
@@ -44,7 +42,7 @@ class OrderApp():
                   orderitem.quantity+=int(qty)
                   orderitem.save()
                 else:
-                   orderItem=OrderDetails.objects.create(product=product,order=old_order,color=color,size=size,quantity=qty)
+                   orderItem=OrderDetails.objects.create(product=product,order=old_order,quantity=qty)
                 messages.success(request,"Was added to cart")
                 return render(request,template_name='Shop/detail.html',  context=
                 {
@@ -62,7 +60,7 @@ class OrderApp():
                 new_order.is_finished=False
                 new_order.save()
                 #-----------------------#
-                orderItem=OrderDetails.objects.create(product=product,order=new_order,color=color,size=size,quantity=qty)
+                orderItem=OrderDetails.objects.create(product=product,order=new_order,quantity=qty)
                 orderItem.save()
                 messages.success(request,"Was added to cart for new order")
                 return render(request,template_name='Shop/detail.html',  context=
@@ -83,7 +81,7 @@ class OrderApp():
         })
     #----------------------------------------------#
      
-    @login_required
+   
     def PageCart(request):
         Orderdetails=None 
         order=None
@@ -131,6 +129,31 @@ class OrderApp():
                 orderdetails.save()
                
         return redirect('Path_Cart')
+    #--------------------------------------------------------------------------# 
+    @login_required
+    def PageOrder(request):
+        Orderdetails=None 
+        order=None
+        total=0
+        if  request.user.is_authenticated and not request.user.is_anonymous:
+                all_orders= Order.objects.filter(user=request.user)
+                if all_orders:
+                    for o in all_orders:
+                        order=get_object_or_404(Order,id=o.id)
+                        Orderdetails=OrderDetails.objects.all().filter(order=order)
+                        total=0
+                        for sub in Orderdetails:
+                            if sub.product.DiscountPrice:
+                                total+=sub.quantity * sub.product.DiscountPrice
+                            else : total+=sub.quantity * sub.product.Price
+                        o.total=total
+                        o.items_count=Orderdetails.count
+                
+        return render(request,template_name="Shop/orders.html" ,  context={
+           "all_orders":all_orders
+           
+        })
+
 
 
 

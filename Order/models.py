@@ -9,6 +9,8 @@ class Order(models.Model):
     start_date=models.DateTimeField(auto_now_add=True)
     orderd_date=models.DateTimeField()
     is_finished=models.BooleanField(default=False)
+    total=0
+    items_count=0
 
     def __str__(self) -> str:
         return self.user.username
@@ -16,8 +18,7 @@ class Order(models.Model):
 class OrderDetails(models.Model):
     product=models.ForeignKey(Products,on_delete=models.CASCADE)
     order=models.ForeignKey(Order,on_delete=models.CASCADE)
-    color=models.CharField(max_length=255,choices=type_color,default='White')
-    size=models.CharField(max_length=255,choices=type_size,default='S')
+    
     quantity=models.PositiveIntegerField(default=1)
     
     def get_price(self):

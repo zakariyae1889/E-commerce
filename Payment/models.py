@@ -13,5 +13,8 @@ class Payment(models.Model):
     cc_expiry = CardExpiryField(verbose_name='expiration')
     cc_code = SecurityCodeField(verbose_name='security code')
 
+    def __str__(self) -> str:
+        return self.Order.user.username
+
     
     

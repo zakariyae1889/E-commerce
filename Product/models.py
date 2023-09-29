@@ -1,26 +1,9 @@
 from django.db import models
 from django.utils.text import slugify
-from django.contrib.auth.models import User
-from Accounts.models import Profiles
+
 
 # --------------------------------------------Create your models here-------------------------------------#.
-type_color=(
-    ('Red','Red'),
-    ('Black','Black'),
-    ('White','White'),
-    ('Blue','Blue'),
-    ('Green','Green')
 
-    )
-type_size=(
-    ("XS","xs"),
-    ("S","s"),
-    ("M","m"),
-    ("L","l"),
-    ("XL","xl"),
-    ("XXL","xxl"),
-
-)
 class Categorys(models.Model):
     Name=models.CharField(max_length=255)
     

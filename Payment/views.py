@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from Order.models import *
 from .form import PaymentForm
 from django.contrib.auth.decorators import login_required
@@ -7,11 +7,15 @@ class PaymentApp():
     @login_required
     def PagePayment(request): 
         if request.method=='POST':
+            Orderdetails=None 
+            order=None
+            total=0
+            Form=PaymentForm(request.POST)
             if  request.user.is_authenticated and not request.user.is_anonymous:
                 if Order.objects.filter(user=request.user,is_finished=False):
                     order=get_object_or_404(Order,user=request.user,is_finished=False)
                     
-                    Form=PaymentForm(request.POST)
+                   
                     if Form.is_valid():
                         myform=Form.save(commit=False)
                         myform.Order=order
@@ -19,6 +23,7 @@ class PaymentApp():
                     order.is_finished=True
                     order.save()
                     messages.success(request,'Your order is finished')
+                    return redirect('Path_Order')
                     
         else:
             Form=PaymentForm()
@@ -34,9 +39,10 @@ class PaymentApp():
                         if sub.product.DiscountPrice:
                             total+=sub.quantity * sub.product.DiscountPrice
                         else : total+=sub.quantity * sub.product.Price
-        return render(request,template_name="Shop/checkout.html" ,context={
-            "Form":Form,
-            'order':order,
-            'Orderdetails':Orderdetails,
-            'total':total
-        })
+            return render(request,template_name="Shop/checkout.html" ,context={
+                "Form":Form,
+                'order':order,
+                'Orderdetails':Orderdetails,
+                'total':total
+            })
+       

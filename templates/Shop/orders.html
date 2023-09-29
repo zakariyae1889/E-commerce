@@ -1,0 +1,94 @@
+{%extends 'index.html'%}
+{%load static%}
+{%block content%}
+    <!-- Page Header Start -->
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Orders</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Orders</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Cart Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+                {%if  messages %}
+                    {%for message in  messages%}
+                        
+                        <div class="alert alert-success" role="alert">
+                            <strong>{{message}}</strong> 
+                        </div>
+                    {%endfor%}
+                {%endif%}
+                {%if not request.user.is_authenticated or request.user.is_anonymous%}
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">You must be<a href="">Logged in</a></h4>
+                    </div>
+                {%elif all_orders%}
+                        {% if all_orders.count > 0 %}
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading">Found {{all_orders.count}} Orders</h4>
+                        </div>
+                        <table class="table table-bordered text-center mb-0">
+                            <thead class="bg-secondary text-dark">
+                                <tr>
+                                   
+                                    <th scope="col">Order Number</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">ItemCount</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Is Finished</th>
+                                </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                                {%for Order in all_orders %}
+                                <tr>
+                                 
+                                    <td class="align-middle">{{Order.id}}</td>
+                                    
+                                    <td class="align-middle">{{Order.orderd_date|date:'F M Y'}}</td>
+                                   
+                                    <td class="align-middle">{{Order.items_count}}</td>
+                                   
+                                    <td class="align-middle">{{Order.total}}</td>
+
+                                    {% if  Order.is_finished == True %}
+                                        <td class="align-middle text-success">
+                                            Order  Is Completed
+                                        </td>
+                                    {%else%}
+                                        <td class="align-middle text-danger">
+                                            <a href="{%url 'path_payment'%}">
+                                                Order  Is Not Completed
+                                            </a> 
+
+                                        </td>
+                                    {%endif%}
+                                </tr>
+                                {%endfor%}
+                            
+                            </tbody>
+                        
+
+                        </table>
+                        {%endif%}
+                    
+                {%else%}
+                    <div class="alert alert-success" role="alert">
+                         <h4 class="alert-heading">No orders here<a href="{%url 'Path_Shop'%}">AllProduct</a></h4>
+                            
+                    </div>
+                {%endif%}
+            </div>
+          
+        </div>
+    </div>
+    <!-- Cart End -->
+{%endblock%}
