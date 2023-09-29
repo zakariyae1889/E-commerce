@@ -35,5 +35,8 @@ class PaymentApp():
                             total+=sub.quantity * sub.product.DiscountPrice
                         else : total+=sub.quantity * sub.product.Price
         return render(request,template_name="Shop/checkout.html" ,context={
-            "Form":Form
+            "Form":Form,
+            'order':order,
+            'Orderdetails':Orderdetails,
+            'total':total
         })
