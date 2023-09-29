@@ -21,6 +21,13 @@
         <div class="row px-xl-5">
             <div class="col-lg-8">
                 <div class="mb-4">
+                    <div class="alert alert-primary" role="alert">
+                       {%if  messages %}
+                        {%for message in  messages%}
+                            {{message}}
+                        {%endfor%}
+                       {%endif%}
+                    </div>
                     <h4 class="font-weight-semi-bold mb-4 text-center " style="color: crimson;">CheckOut</h4>
                     <div class="row">
                         <div class="card" style="width: 100%;">

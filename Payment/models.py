@@ -8,7 +8,7 @@ class Payment(models.Model):
     Order=models.ForeignKey(Order,on_delete=models.CASCADE)
     ShipmentAddress=models.CharField(max_length=255)
     ShipmentPhone=models.CharField(max_length=255)
-    #user=models.ForeignKey(User,on_delete=models.CASCADE)
+    
     cc_number = CardNumberField(verbose_name='card number')
     cc_expiry = CardExpiryField(verbose_name='expiration')
     cc_code = SecurityCodeField(verbose_name='security code')
