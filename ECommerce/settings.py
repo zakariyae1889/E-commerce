@@ -1,4 +1,4 @@
-import django_heroku
+
 
 from pathlib import Path
 import os
@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.urandom(2500)
+SECRET_KEY = 'D274507D5300Acf10B69C8Ea4Bc3115Ea7Addd0De1F5Eb6960'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG =False
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -142,7 +142,6 @@ else:
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # Default primary key field type
@@ -152,7 +151,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 LOGIN_REDIRECT_URL='Path_Home'
 LOGIN_URL='Path_Login'
 
-django_heroku.settings(locals())
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
