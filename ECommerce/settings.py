@@ -1,5 +1,3 @@
-
-
 from pathlib import Path
 import os
 
@@ -15,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'D274507D5300Acf10B69C8Ea4Bc3115Ea7Addd0De1F5Eb6960'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =False
+DEBUG =True
 
 ALLOWED_HOSTS =["127.0.0.1"]
 
@@ -87,12 +85,9 @@ WSGI_APPLICATION = 'ECommerce.wsgi.application'
 DATABASES = {
     
     'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME':"Shopdb",
-       'USER': "postgres",
-       'PASSWORD':"admin",
-       'HOST': "127.0.0.1",
-       'PORT': "5432",
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME':os.path.join(BASE_DIR,'Shopdb.sqlite3')
+      
     }
 }
 

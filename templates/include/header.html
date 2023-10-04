@@ -28,13 +28,14 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a href="{%url 'Path_Home'%}" class="nav-item nav-link">Home</a>
                         <a href="{%url 'Path_Shop'%}" class="nav-item nav-link active">Shop</a>
+                        <a href="{%url 'Path_Cart'%}" class="nav-item nav-link">Cart</a>
+                        <a href="{% url 'Path_Order'%}" class="nav-item nav-link">MyOrder</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Accounts</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 <a class="dropdown-item">Weclome,{{user.username}}</a>
                                 <a href="{%url 'Path_Profile' %}" class="dropdown-item">Profile</a>
-                                <a href="{%url 'Path_Cart'%}" class="dropdown-item"> My Cart</a>
-                                <a href="{% url 'Path_Order'%}" class="dropdown-item">My Orders</a>
+                               
 
                                 
                             </div>
@@ -44,7 +45,7 @@
                         
                     </div>
                     <div class="navbar-nav ml-auto py-0">
-                        <a  class="nav-item nav-link">{{user.username}}</a>
+                        <a  href="#" class="nav-item nav-link">Weclome,{{user.username}}</a>
                         <a href="{%url 'Path_Logout'%}" class="nav-item nav-link">Logout</a>
                     </div>
                 </div>
