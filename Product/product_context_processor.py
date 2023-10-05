@@ -6,3 +6,10 @@ def get_categorys(request):
     
     return {"category":category}
 
+def filter_category():
+    category=Categorys.objects.all()
+
+    filterCategory=Products.objects.filter(category=category)
+
+    return {"filterCategory":filterCategory}
+
